@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	token "github.com/lukemassa/jclubtakeaways-web/internal/token"
 )
 
 type Templater struct {
@@ -119,22 +121,42 @@ func (t Templater) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func runWebServer(t Templater) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/index.html", http.StatusMovedPermanently)
+	})
+	http.Handle("/{page}", t)
+	http.HandleFunc("/token", GetToken)
+	http.HandleFunc("/hi", HandleHi)
+	port := getPort()
+	fmt.Printf("Listening on %s", port)
+
+	http.ListenAndServe(port, nil)
+
+}
+func usage() {
+	log.Fatal("Usage: server|templates|token")
+}
+
 func main() {
 
 	t := NewTemplater("templates")
-	if len(os.Args) > 1 {
-		if os.Args[1] == "--server" {
-			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				http.Redirect(w, r, "/index.html", http.StatusMovedPermanently)
-			})
-			http.Handle("/{page}", t)
-			log.Print("Listening on :8080")
-			log.Fatal(http.ListenAndServe(":8080", nil))
+	if len(os.Args) != 2 {
+		usage()
+	}
+	switch os.Args[1] {
+	case "server":
+		runWebServer(t)
+	case "templates":
+		err := t.Write("docs")
+		if err != nil {
+			log.Fatal(err)
 		}
-		log.Fatal("Usage: [--server]")
+	case "token":
+		fmt.Print(token.GetToken())
+		fmt.Println()
+	default:
+		usage()
 	}
-	err := t.Write("docs")
-	if err != nil {
-		log.Fatal(err)
-	}
+
 }

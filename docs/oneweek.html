@@ -10,7 +10,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/1.1.4/dist/sheetrock.min.js"></script>
 
 <title>JClub Takeaways</title>
-{{ block "head" .}}{{ end }}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -47,12 +49,77 @@
     <div class="container">
       <div class="page-header">
         <div id="alerts"></div>
-{{ block "pageheader" .}}
-{{ end }}
+
+    <h3 id="header">
+    </h3>
+    
       </div>
-{{ block "pagebody" .}}{{ end }}
+
+<table id="oneweek" class="table table-condensed table-striped">
+    <thead>
+        <th>Name</th>
+        <th>Takeaway</th>
+    </thead>
+</table>
+<button id="entertakeaway" type="submit" class="btn btn-success">Enter takeway</button>
+
+<script>
+
+
+$(document).ready(function() {
+    var thisdate = window.location.hash.split('#')[1];
+    $("#entertakeaway").on("click", function() {
+        window.location.href = "/submit.html#" + thisdate;
+    });
+    get_row_from_date(thisdate, function(row) {
+
+        var html;
+        if (row["Presenter"] && row["Presenter"] != "-") {
+        
+            html = "Takeaways from " + row["Topic"] +
+            " by " + row["Presenter"] +
+            " on " + row["Date"];
+        }
+        else {
+            reason = "";
+            if (row["Topic"] && row["Topic"] !== "")
+                reason = " because of " + row["Topic"];
+
+            html = "No Journal Club on " + row["Date"] + reason;
+            $("#oneweek").remove();
+            $("#entertakeaway").remove();
+        }
+        $("#header").html(html);
+    });
+    $('#oneweek').sheetrock({
+        url:jclubtakeaways ,
+        query: 'select A,B,C',
+        rowTemplate: function(e) {
+            
+            if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
+                return "";
+            var data = e.cellsArray;
+            
+            if (thisdate !== data[0])
+                return "";
+            var datestr = escapeHTML(data[0]);
+            var name = escapeHTML(data[1]);
+            var takeaway = escapeHTML(data[2]);
+            takeaway = takeaway.replace(/\n/g, "<br>");
+                
+
+            return "<tr>" +
+                   "<td>" + name + "</td>" +
+                   "<td>" + takeaway + "</td>" +
+                   "</tr>";
+        }
+
+    });
+});
+</script>
+
     </div>
-{{ block "pagefooter" .}}{{ end }}
+
      <table id="placeholder" style="display: none;"></table>
       </body>
 <script>
@@ -205,7 +272,7 @@ function append_entry(range, values, success) {
     
     $.ajax({
       dataType: 'json',
-      url: "/token",
+      url: "https://jclubtakeaways-api-v2.herokuapp.com/token",
       error: function(data, res, xhr) {
         log_alert("danger", "Failed to load token")
       },

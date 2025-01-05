@@ -10,7 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/1.1.4/dist/sheetrock.min.js"></script>
 
 <title>JClub Takeaways</title>
-{{ block "head" .}}{{ end }}
+
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -47,12 +47,44 @@
     <div class="container">
       <div class="page-header">
         <div id="alerts"></div>
-{{ block "pageheader" .}}
-{{ end }}
+
+    <h3 id="header">Previous Weeks
+    </h3>
+    
       </div>
-{{ block "pagebody" .}}{{ end }}
+
+<table id="weeks" class="table table-condensed table-striped">
+    <thead>
+        <th>Date</th>
+        <th>Presenter</th>
+        <th>Topic</th>
+    </thead>
+</table>
+<script>
+$(document).ready(function() {
+    
+    $('#weeks').sheetrock({
+        url:jclubsheet ,
+        query: "select A,B,C order by A desc",
+        rowTemplate: function(e) {
+            if (JSON.stringify(e.cellsArray)==JSON.stringify(e.labels))
+                return "";
+            var oneweek = oneweek_from_row(e.cellsArray);
+            if (!has_occurred(oneweek.date))
+                return "";
+            var datehtml = "<a class='date' href=/oneweek.html#" + oneweek.datestr + ">" + oneweek.datestr + "</a>";
+            return "<tr>" +
+                   "<td>" + datehtml + "</td>" +
+                   "<td>" + oneweek.presenter + "</td>" +
+                   "<td>" + oneweek.topic + "</td>" +
+                   "</tr>";
+        }
+    });
+});
+</script>
+
     </div>
-{{ block "pagefooter" .}}{{ end }}
+
      <table id="placeholder" style="display: none;"></table>
       </body>
 <script>
@@ -205,7 +237,7 @@ function append_entry(range, values, success) {
     
     $.ajax({
       dataType: 'json',
-      url: "/token",
+      url: "https://jclubtakeaways-api-v2.herokuapp.com/token",
       error: function(data, res, xhr) {
         log_alert("danger", "Failed to load token")
       },
