@@ -1,0 +1,12 @@
+Code:
+- Handle commit.txt
+- Use embed to load all files
+- Detect issues w missing API token early
+
+Deploy:
+- Create heroku dev app, deploy from github action on push to `development`
+- Create heroku prd app, deploy from github action on push to `main`
+- Move jclubtakeaways.com to this new URL
+- Write up docs explaining how to do it
+- Archive old repos
+- Delete old heroku app
