@@ -121,7 +121,7 @@ func (t Templater) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	t := NewTemplater("src/templates")
+	t := NewTemplater("templates")
 	if len(os.Args) > 1 {
 		if os.Args[1] == "--server" {
 			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
