@@ -14,6 +14,12 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+type Tokener struct{}
+
+func New() Tokener {
+	return Tokener{}
+}
+
 type tokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
@@ -77,7 +83,7 @@ func getTokenFromAPI(assertion string) (string, error) {
 }
 
 // GetToken get a token
-func GetToken() string {
+func (t Tokener) Get() string {
 
 	assertion, err := getAssertion()
 	if err != nil {
@@ -90,4 +96,11 @@ func GetToken() string {
 	}
 
 	return token
+}
+
+func (t Tokener) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	tok := t.Get()
+	res := fmt.Sprintf("{\"token\":\"%s\",\"error\":\"\"}", tok)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, res)
 }

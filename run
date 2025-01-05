@@ -4,4 +4,4 @@ set -e
 set -o pipefail
 
 export WEB_CLIENT_KEY=$(gpg -d ~/creds/webclientaccount.rsa.asc | base64)
-go run . server
+go run main.go server

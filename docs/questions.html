@@ -296,7 +296,7 @@ function append_entry(range, values, success) {
     
     $.ajax({
       dataType: 'json',
-      url: "https://jclubtakeaways-api-v2.herokuapp.com/token",
+      url: "/token",
       error: function(data, res, xhr) {
         log_alert("danger", "Failed to load token")
       },

@@ -2,6 +2,7 @@ Code:
 - Handle commit.txt
 - Use embed to load all files
 - Detect issues w missing API token early
+- Maybe don't save docs/ ?
 
 Deploy:
 - Create heroku dev app, deploy from github action on push to `development`
