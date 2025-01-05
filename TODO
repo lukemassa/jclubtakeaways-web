@@ -10,3 +10,7 @@ Deploy:
 - Write up docs explaining how to do it
 - Archive old repos
 - Delete old heroku app
+
+Follow ups:
+- Add favicon
+- Add README
