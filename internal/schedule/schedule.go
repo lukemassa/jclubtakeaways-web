@@ -44,8 +44,24 @@ func (s Schedule) Deadlines() Deadlines {
 				Description: "Ask for the blurb for the first jclub",
 			},
 			{
+				Date:        firstJclubThisMonth.Add(oneDay * 6 * -1),
+				Description: "Send gentle reminder",
+			},
+			{
+				Date:        firstJclubThisMonth.Add(oneDay * 3 * -1),
+				Description: "Send email for first club",
+			},
+			{
 				Date:        secondJclubThisMonth.Add(oneDay * 11 * -1),
 				Description: "Ask for the blurb for the second jclub",
+			},
+			{
+				Date:        secondJclubThisMonth.Add(oneDay * 6 * -1),
+				Description: "Send gentle reminder",
+			},
+			{
+				Date:        secondJclubThisMonth.Add(oneDay * 3 * -1),
+				Description: "Send email for second jclub",
 			},
 		},
 		NextMonth: []Deadline{

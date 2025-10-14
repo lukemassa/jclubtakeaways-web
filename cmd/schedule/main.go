@@ -36,12 +36,12 @@ func main() {
 	deadlines := s.Deadlines()
 	fmt.Println("Current month")
 	for _, deadline := range deadlines.ThisMonth {
-		fmt.Printf("  %s: %s\n", deadline.Date.Format(time.DateOnly), deadline.Description)
+		fmt.Printf("  %s: %s\n", deadline.Date.Format("2006-01-02 Mon"), deadline.Description)
 	}
 
 	fmt.Println("\nNext month")
 	for _, deadline := range deadlines.NextMonth {
-		fmt.Printf("  %s: %s\n", deadline.Date.Format(time.DateOnly), deadline.Description)
+		fmt.Printf("  %s: %s\n", deadline.Date.Format("2006-01-02 Mon"), deadline.Description)
 	}
 
 }
