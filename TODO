@@ -3,6 +3,11 @@ Current setup:
 - jclubtakeaways-gui: Builds for github app
 - jclubtakeaways-gui-dev: Some kind of dev version?
 
+Goal setup:
+- This repo deploys a heroku app that just gets the token when asked
+- This repo also deploys, via github actions + github pages, static content
+- No "dev", just run locally if you want to develop
+
 Code:
 - Handle commit.txt
 - Use embed to load all files
